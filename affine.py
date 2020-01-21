@@ -16,7 +16,7 @@ import math
 
 
 def inverse_mod(a, maxNo):  # find inverse modulo of a number
-    for b in range(1, maxNo, 2):  # don't process even numbers as they cant be coprime
+    for b in coprime_gen(maxNo):  # Only process coprimes
         if ((a * b) % maxNo) == 1:
             return b
     raise ValueError(str(a)+" has no inverse mod "+str(maxNo))
@@ -86,7 +86,12 @@ def get_inputs(keyspace, coprimes):
 
         try:
             b = int(b)
-            getInput = False
+
+            if b not in coprimes:
+                print("Please enter an integer that is coprime with " + str(len(keyspace)))
+                print("E.g: " + str(coprimes))
+            else:
+                getInput = False
         except ValueError:
             print("Invalid number! Please enter an integer")
 
