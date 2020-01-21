@@ -1,18 +1,25 @@
+####################################################
+#
+#   Imports
+#
+####################################################
+
+
 import math
 
 
 ####################################################
 #
-#   Math stuff
+#   Math
 #
 ####################################################
 
 
 def inverse_mod(a, maxNo):  # find inverse modulo of a number
-    for b in range(1, maxNo, 2):  # don't process even numbers
+    for b in range(1, maxNo, 2):  # don't process even numbers as they cant be coprime
         if ((a * b) % maxNo) == 1:
             return b
-    raise ValueError(str(a)+" has no inverse mod"+str(maxNo))
+    raise ValueError(str(a)+" has no inverse mod "+str(maxNo))
 
 
 def coprime(a, b):  # check if a and b are coprime using math module
@@ -24,20 +31,22 @@ def coprime_gen(n):  # find coprimes of a number 'n'
         return []
     else:
         coprimesTemp = []
-        for toCheck in range(1, n, 2):  # don't check even numbers
-            if coprime(toCheck, n):
-                coprimesTemp.append(toCheck)
+        for toCheck in range(1, n, 2):  # don't check even numbers as they cant be coprime
+            if coprime(toCheck, n):  # if current number is coprime with n
+                coprimesTemp.append(toCheck)  # add number to returned array
         return coprimesTemp
 
 
 ####################################################
 #
-#   Input stuff
+#   Inputs
 #
 ####################################################
 
 
 def get_inputs(keyspace, coprimes):
+
+    # Ask user if they want to encrypt or decrypt, and validate the response
     getInput = True
     while getInput:
         print("Encrypt (e) or decrypt (d)?")
@@ -54,6 +63,7 @@ def get_inputs(keyspace, coprimes):
         else:
             print("'"+str(encrypt_decrypt)+"' is an invalid option!")
 
+    # Ask the user to enter the first key and validate the response
     getInput = True
     while getInput:
         a = input("First key (a) (must be coprime with "+str(len(keyspace))+"): ")
@@ -69,6 +79,7 @@ def get_inputs(keyspace, coprimes):
         except ValueError:
             print("Invalid number! Please enter an integer")
 
+    # Ask the user to enter the second key and validate the response
     getInput = True
     while getInput:
         b = input("Second key (b): ")
@@ -79,43 +90,41 @@ def get_inputs(keyspace, coprimes):
         except ValueError:
             print("Invalid number! Please enter an integer")
 
+    # Ask the user to enter the message to encrypt/decrypt (no need to validate here as all
+    # unrecognised characters are removed
     message = input("Message to "+str(encrypt_decrypt)+": ")
+    message = message.upper()
 
     return a, b, encrypt_decrypt, message
 
 
 ####################################################
 #
-#   Encryption and decryption stuff
+#   Encryption and decryption
 #
 ####################################################
 
 
 def encrypt_decrypt_single(inputChar, a, b, keyspace, encrypt):  # str, int, int, str, str
-    if inputChar == ' ':  # check for spaces
+    if inputChar == ' ':  # check for spaces and leave them in the message
         return ' '
 
     try:
-        x = keyspace.index(inputChar)
-    except ValueError:  # if current char is unrecognised, remove it (as per spec)
+        x = keyspace.index(inputChar)  # convert char to corresponding number
+    except ValueError:  # if current char is unrecognised (not in keyspace), remove it (as per spec)
         return ''
 
-    # ensure char is lowercase
-
     if encrypt == 'encrypt':
-        output_x = (a * x + b) % len(keyspace)
+        output_x = (a * x + b) % len(keyspace)  # actual encryption algorithm
 
     elif encrypt == 'decrypt':
         inverse_a = inverse_mod(a, len(keyspace))
-        output_x = (inverse_a * (x - b)) % len(keyspace)
+        output_x = (inverse_a * (x - b)) % len(keyspace)  # actual decryption algorithm
 
     else:
         raise SyntaxError("Error in encrypt/decrypt variable. Check spelling?")
 
     outputChar = keyspace[output_x]
-
-    # make encrypted char uppercase?
-
     return outputChar
 
 
@@ -136,11 +145,11 @@ def encrypt_decrypt_string(plainText, a, b, keyspace, encrypt):
 
 
 def main():
-    keyspace = "abcdefghijklmnopqrstuvwxyz"
+    keyspace = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     coprimes = coprime_gen(len(keyspace))
 
-    inputs = get_inputs(keyspace,coprimes)
+    inputs = get_inputs(keyspace, coprimes)
     keys = inputs[:2]  # keys are first 2 numbers
 
     encrypt_decrypt = inputs[2]
@@ -150,9 +159,10 @@ def main():
     if keys[0] not in coprimes:
         raise ValueError("Error! "+str(keys[0]+" is not coprime with " + str(len(keyspace))))
 
-    print(
-        encrypt_decrypt_string(message, keys[0], keys[1], keyspace, encrypt_decrypt)
-    )
+    outmessage = encrypt_decrypt_string(message, keys[0], keys[1], keyspace, encrypt_decrypt)
+    print("\nYour "+str(encrypt_decrypt)+"ed message is:")
+    print(outmessage)
 
 
 main()
+
