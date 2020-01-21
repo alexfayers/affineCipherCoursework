@@ -84,28 +84,60 @@ def encrypt_decrypt_string(plainText, a, b, keyspace, encrypt):
 
 
 def main():
-    encryptedMessage = "UYLCCZPFFWUYTGDHZ"
-    encryptedMessage = "PAJJYXPANA"  # HELLOTHERE (a=5,b=6)
+    encryptedMessage = "UYLCCZPFFWUYTGDHZ"  # PRETTYGOODPRIVACY (a=15, b=3)
+    # encryptedMessage = "PAJJYXPANA"  # HELLOTHERE (a=5, b=6)
+
     encryptedMessageLen = len(encryptedMessage)
     keyspace = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
     coprimes = coprime_gen(len(keyspace))
 
+    bestOverallKeys = [[]]
+    bestOverallWords = ['']
+
     with open("englishwords.txt") as word_file:
         for a in coprimes:
-            print("next a", a)
-            for b in range(1, len(keyspace) - 2):
+            print("Checking an A value of " + str(a) + "...")
 
+            for b in coprimes:
+                addedToWords = False
                 decrypted = encrypt_decrypt_string(encryptedMessage, a, b, keyspace, 'decrypt')
 
                 word_file.seek(0)
                 for word in word_file:
+
                     word = word.upper().strip()
-                    if word in decrypted and len(word) >= 3:
-                        print(word, "found in ", decrypted)
 
+                    # these if's don't use 'and' statements to save on processing time
+                    if len(word) >= len(bestOverallWords[0]):  # if current word is longer than the best
+                        if word in decrypted:  # decrypted.startswith(word):
+                            if len(word) > len(bestOverallWords[0]):
+                                addedToWords = True
+                                bestOverallWords = [word]
+                                bestOverallKeys = [[a, b]]
+                                print("Found longer word! New overall best length is " + str(len(word)))
+                                print("(Word found: " + str(word) + ")")
+                                print("Decrypted text: "+str(decrypted)+")")
 
+                            elif len(word) == len(bestOverallWords[0]):
+                                addedToWords = True
+                                bestOverallWords.append(word)
+                                bestOverallKeys.append([a, b])
 
+            if not addedToWords:
+                print("No valid english words found with this A value.")
+
+        print("Longest words overall are:")
+        print(bestOverallWords)
+        print("With keys:")
+        print(bestOverallKeys)
+        print()
+        print("Therefore possible decrypted messages are:")
+
+        for pair in range(len(bestOverallKeys)):
+            print(encrypt_decrypt_string(encryptedMessage, bestOverallKeys[pair][0], bestOverallKeys[pair][1],
+                                         keyspace, 'decrypt')
+)
 
 main()
 
