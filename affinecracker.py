@@ -117,7 +117,7 @@ def main():
                                 bestOverallKeys = [[a, b]]
                                 print("Found longer word! New overall best length is " + str(len(word)))
                                 print("(Word found: " + str(word) + ")")
-                                print("Decrypted text: "+str(decrypted)+")")
+                                print("(Decrypted text: "+str(decrypted)+")")
 
                             elif len(word) == len(bestOverallWords[0]):
                                 addedToWords = True
@@ -140,4 +140,3 @@ def main():
 )
 
 main()
-
