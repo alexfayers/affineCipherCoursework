@@ -174,4 +174,6 @@ def main():
     print("\nYour "+str(encrypt_decrypt)+"ed message is:")
     print(outmessage)
 
+    input("Press enter to exit...")
+
 main()
