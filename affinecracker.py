@@ -15,15 +15,21 @@ import math
 ####################################################
 
 
-def inverse_mod(a, maxNo):  # find inverse modulo of a number
-    for b in range(1, maxNo, 2):  # don't process even numbers as they cant be coprime
-        if ((a * b) % maxNo) == 1:
-            return b
-    raise ValueError(str(a)+" has no inverse mod "+str(maxNo))
+def extended_gcd(a, b):
+    if a == 0:
+        return b, 0, 1
+    else:  # otherwise
+        gcd, x, y = extended_gcd(b % a, a)
+
+    return gcd, y - (b // a) * x, x
 
 
-def coprime(a, b):  # check if a and b are coprime using math module
-    return math.gcd(a, b) == 1
+def inverse_mod(a, m):
+    g, x, y = extended_gcd(a, m)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % m
 
 
 def coprime_gen(n):  # find coprimes of a number 'n'
@@ -32,7 +38,7 @@ def coprime_gen(n):  # find coprimes of a number 'n'
     else:
         coprimesTemp = []
         for toCheck in range(1, n, 2):  # don't check even numbers as they cant be coprime
-            if coprime(toCheck, n):  # if current number is coprime with n
+            if math.gcd(toCheck, n) == 1:  # if current number is coprime with n
                 coprimesTemp.append(toCheck)  # add number to returned array
         return coprimesTemp
 
@@ -137,6 +143,7 @@ def main():
         for pair in range(len(bestOverallKeys)):
             print(encrypt_decrypt_string(encryptedMessage, bestOverallKeys[pair][0], bestOverallKeys[pair][1],
                                          keyspace, 'decrypt')
-)
+                  )
+
 
 main()
