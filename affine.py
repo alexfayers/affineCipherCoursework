@@ -14,16 +14,21 @@ import math
 #
 ####################################################
 
+def extended_gcd(a, b):
+    if a == 0:
+        return b, 0, 1
+    else:  # otherwise
+        gcd, x, y = extended_gcd(b % a, a)
 
-def inverse_mod(a, maxNo):  # find inverse modulo of a number
-    for b in coprime_gen(maxNo):  # Only process coprimes
-        if ((a * b) % maxNo) == 1:
-            return b
-    raise ValueError(str(a)+" has no inverse mod "+str(maxNo))
+    return gcd, y - (b // a) * x, x
 
 
-def coprime(a, b):  # check if a and b are coprime using math module
-    return math.gcd(a, b) == 1
+def inverse_mod(a, m):
+    g, x, y = extended_gcd(a, m)
+    if g != 1:
+        raise Exception('modular inverse does not exist')
+    else:
+        return x % m
 
 
 def coprime_gen(n):  # find coprimes of a number 'n'
@@ -32,7 +37,7 @@ def coprime_gen(n):  # find coprimes of a number 'n'
     else:
         coprimesTemp = []
         for toCheck in range(1, n, 2):  # don't check even numbers as they cant be coprime
-            if coprime(toCheck, n):  # if current number is coprime with n
+            if math.gcd(toCheck, n) == 1:  # if current number is coprime with n
                 coprimesTemp.append(toCheck)  # add number to returned array
         return coprimesTemp
 
@@ -165,9 +170,8 @@ def main():
         raise ValueError("Error! "+str(keys[0]+" is not coprime with " + str(len(keyspace))))
 
     outmessage = encrypt_decrypt_string(message, keys[0], keys[1], keyspace, encrypt_decrypt)
+
     print("\nYour "+str(encrypt_decrypt)+"ed message is:")
     print(outmessage)
 
-
 main()
-
