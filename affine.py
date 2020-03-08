@@ -92,8 +92,8 @@ def get_inputs(keyspace, coprimes):
         try:
             b = int(b)
 
-            if b not in range(2, len(keyspace)):
-                print("Please enter an integer between 2 and " + str(len(keyspace)-1))
+            if b not in range(1, len(keyspace)):
+                print("Please enter an integer between 1 and " + str(len(keyspace)-1))
             else:
                 getInput = False
         except ValueError:

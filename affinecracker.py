@@ -105,7 +105,7 @@ def main():
         for a in coprimes:
             print("Checking an A value of " + str(a) + "...")
 
-            for b in coprimes:
+            for b in range(1, len(keyspace)-1):
                 addedToWords = False
                 decrypted = encrypt_decrypt_string(encryptedMessage, a, b, keyspace, 'decrypt')
 
