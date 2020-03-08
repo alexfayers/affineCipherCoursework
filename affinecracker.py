@@ -90,8 +90,9 @@ def encrypt_decrypt_string(plainText, a, b, keyspace, encrypt):
 
 
 def main():
-    encryptedMessage = "UYLCCZPFFWUYTGDHZ"  # PRETTYGOODPRIVACY (a=15, b=3)
+    encryptedMessage = input("Please enter the cipher-text to crack: ")
     # encryptedMessage = "PAJJYXPANA"  # HELLOTHERE (a=5, b=6)
+    # "UYLCCZPFFWUYTGDHZ"  # PRETTYGOODPRIVACY (a=15, b=3)
 
     encryptedMessageLen = len(encryptedMessage)
     keyspace = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
