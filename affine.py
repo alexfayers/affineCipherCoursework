@@ -92,9 +92,8 @@ def get_inputs(keyspace, coprimes):
         try:
             b = int(b)
 
-            if b not in coprimes:
-                print("Please enter an integer that is coprime with " + str(len(keyspace)))
-                print("E.g: " + str(coprimes))
+            if b not in range(2, len(keyspace)):
+                print("Please enter an integer between 2 and " + str(len(keyspace)-1))
             else:
                 getInput = False
         except ValueError:
