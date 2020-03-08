@@ -101,7 +101,7 @@ def main():
     bestOverallKeys = [[]]
     bestOverallWords = ['']
 
-    with open("englishwords.txt") as word_file:
+    with open("1000.txt") as word_file:
         for a in coprimes:
             print("Checking an A value of " + str(a) + "...")
 
@@ -144,6 +144,6 @@ def main():
             print(encrypt_decrypt_string(encryptedMessage, bestOverallKeys[pair][0], bestOverallKeys[pair][1],
                                          keyspace, 'decrypt')
                   )
-
+        input("Press enter to exit...")          
 
 main()
